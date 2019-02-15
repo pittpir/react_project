@@ -1,69 +1,146 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Project_3 Create a React Front End
 
-## Available Scripts
+### Create a SPA for Star Wars in React
 
-In the project directory, you can run:
+Have the user land on a page to display their current stats in the game, show stats on the various ships, skills, and characters.  Perhaps make a minimal login page to allow the user to navigate to protected pages where they can see their own account stats.
 
-### `npm start`
+I would use the 3rd party API (https://swgoh.gg/api/ "SWGOH.GG API Site") as well as my API I developed in Project 2 below.  
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+#Create DB with CRUD routes in nodeJS
 
-### `npm test`
+### Star Wars Galaxy of Heroes (swgoh) RESTful API
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+I play a mobile game called Star Wars Galaxy of Heroes.  The game has an api from which I can absorb and use in my DB.  
+The idea would be to query the various characters, ships and abilites.  I can then correlate my account to see what I need to gain new characters being offered.  
 
-### `npm run build`
+For example, let say the game is going to introduce Jedi Knight Luke Skywalker next week giving me 7 days to prepare.  The requirements to obtain him may require a 7 star R2D2, Leia, Chewie, Han Solo and C3PO.  I may only have R2D2 at 5 stars and I do not have C3PO yet.  What would I have to do or how much would it cost me to obtain the characters I need to unlock JK Luke Skywalker?  
+ 
+(https://swgoh.gg/api/ "SWGOH.GG API Site")
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Routes
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+#### Characters
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- /swgoh/characters - (method: GET) will provide a json list of all the characters and their corresponding data.
 
-### `npm run eject`
+- /swgoh/characters/id - (method: GET) will provide a json list of all the specific character and their corresponding data.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- /swgoh/characters/id - (method: DELETE) will delete the specific character and their corresponding data.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- /swgoh/characters - (method: POST) Will create a new character with the corresponging data.  Data must be in the body.  Refer to Character's schema (below) for what items to pass.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- /swgoh/characters/id - (method: PUT) will update the specific character and specific data.  Data must be in the body.  Refer to Character's schema (below) for what items to pass.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```sql
+  char_id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  power INT NOT NULL,
+  alignment VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL,
+  ship VARCHAR(255),
+  ship_id INT REFERENCES ships(ship_id),
+  tags text[],
+  abilities text[],
+  base_id VARCHAR(255) NOT NULL
+```
 
-## Learn More
+#### Ships
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- /swgoh/ships - (method: GET) will provide a json list of all the ships and it's corresponding data.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- /swgoh/ships/id - (method: GET) will provide a json list of all the specific ships and it's corresponding data.
 
-### Code Splitting
+- /swgoh/ships/id - (method: DELETE) will delete the specific ships and it's corresponding data.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+- /swgoh/ships - (method: POST) Will create a new ship with the corresponging data.  Data must be in the body.  Refer to Ships' schema (below) for what items to pass.
 
-### Analyzing the Bundle Size
+- /swgoh/ships/id - (method: PUT) will update the specific ship and specific data.  Data must be in the body.  Refer to Ships' schema (below) for what items to pass.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+```sql
+  ship_id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  description VARCHAR(255) NOT NULL,
+  power INT NOT NULL,
+  alignment VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL,
+  capital_ship BOOLEAN NOT NULL,
+  base_id VARCHAR(255),
+  tags text[],
+  abilities text[]
+```
 
-### Making a Progressive Web App
+#### Abilities
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+- /swgoh/abilities - (method: GET) will provide a json list of all the abilities in the game and their corresponding data.
 
-### Advanced Configuration
+- /swgoh/abilities/id - (method: GET) will provide a json list of all the specific abilities and their corresponding data.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+- /swgoh/abilities/id - (method: DELETE) will delete the specific abilities and their corresponding data.
 
-### Deployment
+- /swgoh/abilities - (method: POST) Will create a new abilities with the corresponging data.  Data must be in the body.  Refer to Abilities' schema (below) for what items to pass.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+- /swgoh/abilities/id - (method: PUT) will update the specific abilities and specific data.  Data must be in the body.  Refer to Abilities' schema (below) for what items to pass.
 
-### `npm run build` fails to minify
+```sql
+  ability_id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
+  tier_max INT NOT NULL,
+  is_zeta BOOLEAN NOT NULL,
+  is_omega BOOLEAN NOT NULL,
+  combat_type INT NOT NULL,
+  type INT,
+  is_basic BOOLEAN NOT NULL,
+  is_special BOOLEAN NOT NULL,
+  is_reinforcement BOOLEAN NOT NULL,
+  is_contract BOOLEAN NOT NULL,
+  is_unique BOOLEAN NOT NULL,
+  is_leader BOOLEAN NOT NULL,
+  char_table_id INT REFERENCES Characters(char_id),
+  ship_table_id INT REFERENCES Ships(ship_id)
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-# react_project
+### Format
+
+Response formats: 			JSON
+Requires authentication?:	NO
+Rate limited?				NO
+Paramaters:					None
+
+### Examples
+
+Use curl if you like CLI.  By the way, if you wish to see the json in a pretty format there are several options.
+
+**Option 1:** Must have python 2.6+ installed. 
+
+- curl localhost:3000/swgoh/ships | python -m json.tool
+
+**Option 2:**  Install npm package json (My favorite way since it does color!). 
+
+- curl localhost:3000/swgoh/ships | ./node_modules/.bin/json -i
+
+(HINT: **Look for a do.sh in the repository for the examples below**): 
+
+```java
+GET command:		curl localhost:3000/swgoh/ships | ./node_modules/.bin/json -i
+DELETE Command:		curl -X DELETE localhost:3000/swgoh/abilities/869
+
+POST command:		
+
+curl -X POST localhost:3000/swgoh/ships -H "Content-Type: application/json" -d '[{"name":"Erase","url":"http://erase","image":"//erase","description":"Erase this","power": 55555,"alignment":"Light Side","role":"Meat Maker","capital_ship":false,"base_id":"Yuk","tags":["Galactic Republic","Jedi"],"abilities":["Dispel","Gain Turn Meter","Offense Up","Reset Cooldown"]}]'
+
+PUT (UPDATE) command:
+
+curl -X PUT localhost:3000/swgoh/ships/6 -H "Content-Type: application/json" -d '[{"url": "http://swgoh.gg/ships/cassians-u-wing/777","image": "//swgoh.gg/static/img/assets/tex.charui_uwing_hero.png/777"}]'
+
+
+```
+
+Use Postman if you like to use a GUI.  Use Content-Type: application/json as the body type when doing post, delete or puts.  
